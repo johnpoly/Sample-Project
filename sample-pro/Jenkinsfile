@@ -1,0 +1,41 @@
+pipeline {
+    agent any
+
+    tools {
+        nodejs 'NodeJS-20'
+    }
+
+    stages {
+        stage('Clone Code') {
+            steps {
+                git branch: 'master',
+                    url: 'https://github.com/johnpoly/Sample-Project.git'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                dir('sample-pro') {
+                    bat 'npm install'
+                }
+            }
+        }
+
+        stage('Build React App') {
+            steps {
+                dir('sample-pro'){
+                    bat 'npm run build'
+                }
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'React build successful 🎉'
+        }
+        failure {
+            echo 'Build failed ❌'
+        }
+    }
+}
